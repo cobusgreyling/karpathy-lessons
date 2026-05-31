@@ -18,3 +18,13 @@ Repeated everywhere in his work: time spent staring at raw examples is never was
 **Stupidity is mostly impatience.**
 Most mistakes come from skipping steps — not overfitting a batch, not visualizing inputs, not
 checking the loss at init. Slow down and the errors disappear.
+
+---
+
+## Sources
+- [micrograd](https://github.com/karpathy/micrograd) · [nanoGPT](https://github.com/karpathy/nanoGPT) — the from-scratch implementations referenced above.
+- [Neural Networks: Zero to Hero](https://karpathy.ai/zero-to-hero.html) — the build-it-end-to-end course.
+- [A Survival Guide to a PhD](https://karpathy.github.io/2016/09/07/phd/) — Sep 2016, on learning and research taste.
+- [CS231n](https://cs231n.github.io/) — the Stanford course notes.
+
+[← Working With LLMs](06-working-with-llms.md) · [Index](index.md) · [Next: On Education →](08-education.md)

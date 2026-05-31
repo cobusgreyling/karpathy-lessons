@@ -28,3 +28,10 @@ Resist the urge to change five hyperparameters at once. You will learn nothing f
 
 > The two most common causes of failure are a bug in the data pipeline and a learning rate that is
 > wrong by an order of magnitude.
+
+---
+
+## Sources
+- [A Recipe for Training Neural Networks](https://karpathy.github.io/2019/04/25/recipe/) — Karpathy's blog, Apr 2019. The closing quote is from this essay.
+
+[Index](index.md) · [Next: The Most Common Neural Net Mistakes →](02-common-mistakes.md)

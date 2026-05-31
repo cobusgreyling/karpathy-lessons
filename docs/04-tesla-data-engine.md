@@ -17,3 +17,11 @@ engineers from hand-tuning.
 
 **Labeling is engineering, not grunt work.**
 Label quality, label consistency, and the ontology you label against decide your ceiling.
+
+---
+
+## Sources
+- [AI for Full-Self Driving at Tesla](https://www.youtube.com/watch?v=hx7BXih7zx8) — Scaled ML Conference, 2020 (the data engine and "operation vacation").
+- ["data engine" tweet](https://x.com/karpathy/status/1599852921541128194) — Dec 2022: "competitive advantage in AI goes… to those with a data engine."
+
+[← Software 2.0](03-software-2.0.md) · [Index](index.md) · [Next: LLMs as a New Computing Paradigm →](05-llm-paradigm.md)

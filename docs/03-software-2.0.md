@@ -13,3 +13,10 @@ Consequences he draws out:
   than handwritten code.
 - Version control, debugging, and IDEs for 2.0 barely exist yet — the tooling is the opportunity.
 - Increasingly, 1.0 code is the thin glue around large 2.0 blocks.
+
+---
+
+## Sources
+- [Software 2.0](https://karpathy.medium.com/software-2-0-a64152b37c35) — Medium, Nov 2017.
+
+[← The Most Common Neural Net Mistakes](02-common-mistakes.md) · [Index](index.md) · [Next: The Tesla Data Engine →](04-tesla-data-engine.md)

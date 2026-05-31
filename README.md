@@ -4,9 +4,15 @@ A distilled field guide to the lessons Andrej Karpathy has shared across a decad
 neural networks at OpenAI, leading AI for Tesla Autopilot, teaching Stanford's CS231n, and
 shipping nanoGPT, micrograd, and Eureka Labs.
 
-Curated by **Cobus Greyling**.
+Curated by **Cobus Greyling** ([Medium](https://cobusgreyling.medium.com)).
 
 This is not a biography. It is a working set of principles you can apply tomorrow.
+
+**Who it's for:** ML engineers, applied researchers, and anyone building with or on top of
+neural nets and LLMs. Read it front to back in ~15 minutes, or jump to a chapter — each ends
+with links to Karpathy's original essays, talks, and code so you can go to the source.
+
+📖 Read as a site: **https://cobusgreyling.github.io/karpathy-lessons/**
 
 ---
 
@@ -43,5 +49,8 @@ This is not a biography. It is a working set of principles you can apply tomorro
 
 Released under the [MIT License](LICENSE). Copyright © 2026 Cobus Greyling.
 
+Corrections and additions welcome — see [CONTRIBUTING](CONTRIBUTING.md). This is interpretation,
+not gospel.
+
 *Compiled from Andrej Karpathy's public essays, talks, and lectures. All errors of interpretation
-are the curator's.*
+are the curator's. Last reviewed: May 2026.*

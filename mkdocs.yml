@@ -1,0 +1,38 @@
+site_name: What Andrej Karpathy Learnt
+site_description: A distilled field guide to the lessons Andrej Karpathy has shared across a decade of building neural networks.
+site_author: Cobus Greyling
+site_url: https://cobusgreyling.github.io/karpathy-lessons/
+repo_url: https://github.com/cobusgreyling/karpathy-lessons
+repo_name: cobusgreyling/karpathy-lessons
+copyright: Copyright © 2026 Cobus Greyling — MIT License
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: blue
+  features:
+    - navigation.instant
+    - navigation.top
+    - content.action.edit
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - 1. The Training Recipe: 01-training-recipe.md
+  - 2. Common Mistakes: 02-common-mistakes.md
+  - 3. Software 2.0: 03-software-2.0.md
+  - 4. The Tesla Data Engine: 04-tesla-data-engine.md
+  - 5. LLMs as a Paradigm: 05-llm-paradigm.md
+  - 6. Working With LLMs: 06-working-with-llms.md
+  - 7. Learning and Building: 07-learning-and-building.md
+  - 8. On Education: 08-education.md
+  - 9. One-Page Summary: 09-one-page-summary.md
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true

@@ -25,3 +25,13 @@ about the neighboring cell.
 Spelling errors, arithmetic failures, trouble with whitespace and non-English text, and odd
 prompt sensitivities often trace back to how text is chopped into tokens. "Much of the suffering
 is tokenization."
+
+---
+
+## Sources
+- [[1hr Talk] Intro to Large Language Models](https://www.youtube.com/watch?v=zjkBMFhNj_g) — Nov 2023, the "LLM OS" framing.
+- [Software Is Changing (Again)](https://www.youtube.com/watch?v=LCEmiRjPEtQ) — YC AI Startup School, Jun 2025 ("Software 3.0").
+
+> Frontier-state claims here (System 1/2, jagged intelligence) describe models as of 2025.
+
+[← The Tesla Data Engine](04-tesla-data-engine.md) · [Index](index.md) · [Next: Working With LLMs →](06-working-with-llms.md)

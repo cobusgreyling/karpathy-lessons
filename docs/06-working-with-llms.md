@@ -18,3 +18,13 @@ What you put in the window — and what you leave out — determines the answer.
 **Autonomy has a slider, not a switch.**
 Choose how much rope to give the model per task. High autonomy for throwaway scripts; tight
 control for anything that ships or touches real systems.
+
+---
+
+## Sources
+- ["vibe coding" tweet](https://x.com/karpathy/status/1886192184808149383) — Feb 2, 2025, where the term was coined.
+- [Software Is Changing (Again)](https://www.youtube.com/watch?v=LCEmiRjPEtQ) — YC AI Startup School, Jun 2025.
+
+> Tooling specifics (Cursor, Composer) are as of 2025 and move fast; the loop discipline does not.
+
+[← LLMs as a New Computing Paradigm](05-llm-paradigm.md) · [Index](index.md) · [Next: On Learning and Building →](07-learning-and-building.md)

@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
-"""Generate the GitHub social-preview card (1280x640 PNG)."""
+"""Generate the GitHub social-preview card (1280x640 PNG).
+
+Usage:
+    pip install -r scripts/requirements.txt
+    python scripts/make_card.py
+
+Writes social-preview.png to the repository root, regardless of where it's run from.
+"""
+from pathlib import Path
+
 from PIL import Image, ImageDraw, ImageFont
+
+OUT = Path(__file__).resolve().parent.parent / "social-preview.png"
 
 W, H = 1280, 640
 BG_TOP = (13, 17, 23)       # github-dark
@@ -24,11 +35,22 @@ d = ImageDraw.Draw(img)
 
 
 def font(size, bold=False):
-    paths = [
-        "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold
-        else "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/System/Library/Fonts/Helvetica.ttc",
-    ]
+    # Try common font locations across macOS, Linux, and Windows.
+    if bold:
+        paths = [
+            "/System/Library/Fonts/Supplemental/Arial Bold.ttf",          # macOS
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",       # Debian/Ubuntu
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+            "C:\\Windows\\Fonts\\arialbd.ttf",                            # Windows
+        ]
+    else:
+        paths = [
+            "/System/Library/Fonts/Supplemental/Arial.ttf",              # macOS
+            "/System/Library/Fonts/Helvetica.ttc",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",           # Debian/Ubuntu
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+            "C:\\Windows\\Fonts\\arial.ttf",                             # Windows
+        ]
     for p in paths:
         try:
             return ImageFont.truetype(p, size)
@@ -59,5 +81,5 @@ d.line([MARGIN, 500, W - MARGIN, 500], fill=(48, 54, 61), width=2)
 d.text((MARGIN, 525), "Curated by Cobus Greyling", font=font(34, bold=True), fill=FG)
 d.text((W - MARGIN - 250, 530), "github.com/cobusgreyling", font=font(24), fill=MUTED)
 
-img.save("social-preview.png")
-print("wrote social-preview.png", img.size)
+img.save(OUT)
+print("wrote", OUT, img.size)
