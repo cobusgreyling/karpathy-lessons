@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Andrej Karpathy Learnt &mdash; A Distilled Field Guide</title>
+  <meta name="description" content="A distilled field guide to the lessons Andrej Karpathy has shared across a decade of building neural networks at OpenAI, Tesla Autopilot, Stanford CS231n, nanoGPT, and Eureka Labs. Curated by Cobus Greyling.">
+  <meta property="og:title" content="What Andrej Karpathy Learnt">
+  <meta property="og:description" content="A distilled field guide to the lessons Andrej Karpathy has shared across a decade of building neural networks. 9 lessons. ~15 min read.">
+  <meta property="og:image" content="https://cobusgreyling.github.io/karpathy-lessons/social-preview.png">
+  <meta property="og:url" content="https://cobusgreyling.github.io/karpathy-lessons/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What Andrej Karpathy Learnt">
+  <meta name="twitter:description" content="A distilled field guide to the lessons Andrej Karpathy has shared across a decade of building neural networks.">
+  <meta name="twitter:image" content="https://cobusgreyling.github.io/karpathy-lessons/social-preview.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+    
+    :root {
+      --accent: #3b82f6;
+    }
+    
+    body {
+      font-family: 'Inter', system_ui, sans-serif;
+    }
+    
+    .font-display {
+      font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+      font-feature-settings: "ss02";
+    }
+
+    .section-header {
+      font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+      letter-spacing: -0.025em;
+    }
+
+    .prose-custom p {
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+    
+    .prose-custom strong {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    
+    .prose-custom ul {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .prose-custom li {
+      margin-bottom: 0.375rem;
+      line-height: 1.65;
+    }
+    
+    .prose-custom code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background-color: #18181b;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.875em;
+      color: #93c5fd;
+    }
+    
+    .prose-custom blockquote {
+      border-left: 3px solid #3b82f6;
+      padding-left: 1rem;
+      margin: 1.25rem 0;
+      color: #a1a1aa;
+      font-style: italic;
+    }
+    
+    .lesson-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.2s cubic-bezier(0.4, 0.0, 0.2, 1),
+                  border-color 0.2s;
+    }
+    
+    .lesson-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      border-color: #3b82f6;
+    }
+
+    .principle-card {
+      transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    .principle-card:hover {
+      transform: translateY(-1px);
+      background-color: #18181b;
+    }
+
+    .nav-active {
+      color: white;
+      position: relative;
+    }
+    
+    .nav-active:after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, #3b82f6, transparent);
+    }
+
+    .accent-bar {
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+    }
+
+    .neural-bg {
+      background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.035) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .lesson-number {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .showcase-container {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gh-link {
+      transition: color 0.1s;
+    }
+    
+    .gh-link:hover {
+      color: #60a5fa;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+      z-index: 60;
+      transition: width 0.05s ease-out;
+    }
+
+    .md-content {
+      font-size: 15.5px;
+      line-height: 1.75;
+    }
+
+    .stat-pill {
+      background-color: #18181b;
+      border: 1px solid #27272a;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 antialiased">
+  <!-- Reading progress -->
+  <div id="progress-bar" class="reading-progress" style="width: 0%"></div>
+
+  <!-- Top nav -->
+  <nav class="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-lg">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="px-6 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-x-3">
+          <div class="flex items-center gap-x-2.5">
+            <div class="h-8 w-8 rounded-xl bg-zinc-900 flex items-center justify-center ring-1 ring-inset ring-white/10">
+              <span class="text-xl leading-none mt-px">🧠</span>
+            </div>
+            <div>
+              <div class="font-semibold tracking-tighter text-lg">karpathy lessons</div>
+              <div class="text-[10px] text-zinc-500 -mt-1">distilled</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center gap-x-7 text-sm">
+          <a href="#principles" class="text-zinc-400 hover:text-zinc-200 transition-colors">The 10 Principles</a>
+          <a href="#lessons" class="text-zinc-400 hover:text-zinc-200 transition-colors">The Lessons</a>
+          <a href="#sources" class="text-zinc-400 hover:text-zinc-200 transition-colors">Sources</a>
+          <a href="https://github.com/cobusgreyling/karpathy-lessons" 
+             class="inline-flex items-center gap-x-2 rounded-lg border border-zinc-700 hover:border-zinc-500 px-3 py-1.5 text-sm transition-colors"
+             target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i>
+            <span>GitHub</span>
+          </a>
+        </div>
+
+        <!-- Mobile nav -->
+        <div class="md:hidden">
+          <button id="mobile-menu-btn"
+                  class="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-800 hover:bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
+                  aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-800 bg-zinc-950">
+      <div class="px-6 py-3 flex flex-col gap-y-1 text-sm">
+        <a href="#principles" class="py-2 text-zinc-300">The 10 Principles</a>
+        <a href="#lessons" class="py-2 text-zinc-300">The Lessons</a>
+        <a href="#sources" class="py-2 text-zinc-300">Sources</a>
+        <a href="https://github.com/cobusgreyling/karpathy-lessons" 
+           class="inline-flex items-center gap-x-2 py-2 text-zinc-300" target="_blank">
+          <i class="fa-brands fa-github"></i>
+          <span>View on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="neural-bg border-b border-zinc-800">
+    <div class="max-w-screen-xl mx-auto px-6 pt-16 pb-14">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-[0.5px] text-blue-400 font-medium mb-4">
+          <div class="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse"></div>
+          CURATED FIELD GUIDE
+        </div>
+
+        <h1 class="font-display text-6xl md:text-7xl font-semibold tracking-tighter leading-[0.96]">
+          What Andrej<br>Karpathy Learnt
+        </h1>
+        
+        <p class="mt-5 max-w-lg text-xl text-zinc-400">
+          A distilled set of principles for training neural nets, building reliable systems, 
+          and working with LLMs &mdash; drawn from a decade at OpenAI, Tesla, Stanford, and beyond.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#lessons"
+             class="inline-flex items-center justify-center gap-x-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-zinc-950 shadow-sm hover:bg-zinc-100 active:bg-white transition-all">
+            <span>Start reading the 9 lessons</span>
+            <i class="fa-solid fa-arrow-right text-sm"></i>
+          </a>
+          
+          <a href="#principles"
+             class="inline-flex items-center justify-center gap-x-2 rounded-xl border border-white/20 hover:bg-white/5 px-5 py-3 text-base font-medium transition-colors">
+            The 10 principles
+          </a>
+
+          <a href="https://github.com/cobusgreyling/karpathy-lessons" 
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-x-2 rounded-xl border border-white/10 hover:border-white/30 px-4 py-3 text-sm font-medium transition-colors text-zinc-400 hover:text-zinc-200">
+            <i class="fa-brands fa-github text-base"></i>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+
+        <div class="mt-6 flex items-center gap-x-2 text-sm">
+          <div class="flex -space-x-1 items-center">
+            <div class="h-6 w-6 rounded-full ring-2 ring-zinc-950 bg-zinc-700 overflow-hidden"><img src="https://avatars.githubusercontent.com/u/7868717?v=4" class="h-full w-full object-cover" alt="Cobus Greyling"></div>
+          </div>
+          <div class="text-zinc-400 text-sm">
+            Curated by <span class="text-zinc-300 font-medium">Cobus Greyling</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meta stats -->
+    <div class="border-t border-zinc-800">
+      <div class="max-w-screen-xl mx-auto px-6 py-3.5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        <div class="flex items-center gap-x-5 text-zinc-400">
+          <div class="flex items-center gap-x-1.5"><i class="fa-solid fa-book text-xs"></i> <span>9 lessons</span></div>
+          <div class="flex items-center gap-x-1.5"><i class="fa-regular fa-clock text-xs"></i> <span>~15 min read</span></div>
+          <div class="flex items-center gap-x-1.5"><i class="fa-solid fa-balance-scale text-xs"></i> <span>MIT License</span></div>
+        </div>
+        <div class="h-2.5 w-px bg-zinc-800 hidden sm:block"></div>
+        <div class="text-xs text-zinc-500">Last reviewed • May 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 10 PRINCIPLES -->
+  <section id="principles" class="max-w-screen-xl mx-auto px-6 pt-14 pb-8">
+    <div class="flex items-end justify-between mb-5">
+      <div>
+        <div class="uppercase tracking-[1px] text-xs font-semibold text-blue-400">Core wisdom</div>
+        <h2 class="section-header text-4xl font-semibold tracking-tighter">The 10-Line Distillation</h2>
+      </div>
+      <a href="https://github.com/cobusgreyling/karpathy-lessons/blob/main/README.md" target="_blank"
+         class="hidden sm:flex items-center gap-x-1 text-xs text-zinc-400 hover:text-blue-400 transition-colors">
+        VIEW ON GITHUB <i class="fa-solid fa-external-link-alt ml-1"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <!-- Principle 1 -->
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">01</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Look at your data until you dream about it.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">02</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Build the dumbest end-to-end version first; fix the seed; check the loss at init.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">03</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Overfit before you regularize.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">04</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Visualize the real inputs; trust no abstraction.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">05</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Change one thing at a time.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">06</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">The data flywheel is the product; the model is a commodity.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">07</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Treat the LLM as an OS kernel and the context window as RAM.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">08</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">LLM intelligence is jagged &mdash; verify everything, especially where it seems confident.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">09</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">A lot of weirdness is just tokenization.</div>
+      </div>
+      <div class="principle-card group bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-3">
+        <div class="shrink-0 mt-0.5"><span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-semibold">10</span></div>
+        <div class="text-[13.5px] leading-snug text-zinc-300">Build it from scratch once. Understanding follows.</div>
+      </div>
+    </div>
+    <p class="mt-3 text-xs text-zinc-500">These are the ten lines you can tape above your monitor.</p>
+  </section>
+
+  <!-- LESSONS OVERVIEW / CARDS -->
+  <section id="lessons" class="max-w-screen-xl mx-auto px-6 pt-8 pb-6">
+    <div class="mb-6">
+      <div class="uppercase tracking-[1px] text-xs font-semibold text-blue-400">Browse the guide</div>
+      <h2 class="section-header text-4xl font-semibold tracking-tighter">The 9 Lessons</h2>
+      <p class="mt-1.5 text-zinc-400 max-w-md">Each chapter is short, actionable, and links back to Karpathy&rsquo;s original talks, essays, and code.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Card 1 -->
+      <a href="#lesson-01" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">01</div>
+            <div class="font-semibold text-lg tracking-tight">The Recipe for Training Neural Networks</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">Fail loud, not silent. Become one with the data, build the dumbest end-to-end skeleton first, overfit before you regularize.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Read the full recipe <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="#lesson-02" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">02</div>
+            <div class="font-semibold text-lg tracking-tight">The Most Common Neural Net Mistakes</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">The brutal checklist. The framework will not warn you &mdash; correctness is your job.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Read the checklist <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="#lesson-03" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">03</div>
+            <div class="font-semibold text-lg tracking-tight">Software 2.0</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">Weights as code. The dataset is the source code. A new kind of programming.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Explore Software 2.0 <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="#lesson-04" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">04</div>
+            <div class="font-semibold text-lg tracking-tight">The Tesla Data Engine</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">The flywheel is the product. Production AI is mostly an automated data loop, not model architecture.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">See the data engine <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 5 -->
+      <a href="#lesson-05" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">05</div>
+            <div class="font-semibold text-lg tracking-tight">LLMs as a New Computing Paradigm</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">The LLM is the CPU. Context window is RAM. Prompting is the new system call. Intelligence is jagged.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Enter the LLM OS <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 6 -->
+      <a href="#lesson-06" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">06</div>
+            <div class="font-semibold text-lg tracking-tight">Working With LLMs (and "Vibe Coding")</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">Keep the loop tight. Treat the model as a fast, fallible junior. Context is the scarce resource.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Master the loop <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 7 -->
+      <a href="#lesson-07" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">07</div>
+            <div class="font-semibold text-lg tracking-tight">On Learning and Building</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">Build it from scratch once. micrograd. nanoGPT. Understanding comes from re-deriving, not re-reading.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Learn by building <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 8 -->
+      <a href="#lesson-08" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">08</div>
+            <div class="font-semibold text-lg tracking-tight">On Education (Eureka Labs)</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">The bottleneck is great explanation. AI as the infinitely patient teaching assistant; humans design the path.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">Rethink education <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+
+      <!-- Card 9 -->
+      <a href="#lesson-09" class="lesson-card group block rounded-3xl border border-zinc-800 bg-zinc-900 p-5 hover:border-blue-500/60">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-9 w-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-semibold font-mono ring-1 ring-inset ring-blue-500/20">09</div>
+            <div class="font-semibold text-lg tracking-tight">The One-Page Summary</div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs mt-1.5 text-zinc-500 group-hover:text-blue-400 transition-colors"></i>
+        </div>
+        <p class="mt-3 text-sm text-zinc-400 leading-relaxed">The entire field guide condensed &mdash; one line per chapter for quick reference and scanning.</p>
+        <div class="mt-4 text-xs font-medium text-blue-400 flex items-center gap-1">See the one-pager <span class="group-hover:translate-x-0.5 transition">→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FULL LESSON CONTENT -->
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="border-t border-zinc-800 pt-8"></div>
+    
+    <div class="showcase-container">
+      <!-- LESSON 01 -->
+      <section id="lesson-01" class="scroll-mt-16 pt-4 pb-12">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">01</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">The Recipe for Training Neural Networks</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>Karpathy's most cited engineering essay argues that neural net training fails <em>silently</em>. The code runs, the loss goes down, and the result is quietly wrong. The fix is discipline, not magic.</p>
+          
+          <p><strong>Neural net training is a leaky abstraction.</strong><br>
+          You cannot treat the framework as a black box. The "easy" APIs hide assumptions that break the moment your problem is non-standard.</p>
+          
+          <p><strong>Become one with the data first.</strong><br>
+          Before writing a line of model code, spend hours scanning examples. Look at duplicates, corrupt labels, imbalances, and the long tail. Your intuition about the data is the asset.</p>
+          
+          <p><strong>Set up an end-to-end skeleton, then add complexity.</strong><br>
+          Start with the dumbest possible model that runs. Fix the random seed. Verify the loss at initialization. Overfit a single batch to zero loss. Only then scale up.</p>
+          
+          <p><strong>Fight to overfit before you fight to regularize.</strong><br>
+          First get a model large enough to memorize the training set. A model that cannot overfit cannot learn. Once you can overfit, <em>then</em> regularize your way back to generalization.</p>
+          
+          <p><strong>Trust nothing. Visualize everything.</strong><br>
+          Visualize the exact inputs entering the network &mdash; after augmentation, after the data loader, not in theory. Most bugs live in the pipeline, not the architecture.</p>
+          
+          <p><strong>Tune one thing at a time.</strong><br>
+          Resist the urge to change five hyperparameters at once. You will learn nothing from the result.</p>
+          
+          <blockquote>The two most common causes of failure are a bug in the data pipeline and a learning rate that is wrong by an order of magnitude.</blockquote>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <a href="https://karpathy.github.io/2019/04/25/recipe/" target="_blank" rel="noopener"
+             class="text-sm text-blue-400 hover:underline inline-flex items-center gap-1.5">A Recipe for Training Neural Networks <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+          <span class="text-zinc-500 text-xs ml-2">&mdash; Karpathy's blog, Apr 2019</span>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lessons" class="text-zinc-400 hover:text-zinc-200">← All lessons</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-02" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: Common Mistakes <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 02 -->
+      <section id="lesson-02" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">02</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">The Most Common Neural Net Mistakes</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>A short, brutal checklist Karpathy has repeated for years:</p>
+          <ul>
+            <li>You forgot to <code>.zero_grad()</code> (gradients accumulate across batches).</li>
+            <li>You passed logits where the loss expected probabilities, or vice versa.</li>
+            <li>You left the network in <code>train()</code> mode at eval time (or <code>eval()</code> mode during training).</li>
+            <li>Your learning rate is off by 10× or 100×.</li>
+            <li>You shuffled the labels but not the data, silently breaking the correspondence.</li>
+            <li>You used a view/reshape that scrambled dimensions without throwing an error.</li>
+          </ul>
+          <p>The theme: <strong>the framework will not warn you.</strong> Correctness is your job.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://x.com/karpathy/status/1013244313327681536" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">"most common neural net mistakes" tweet <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-2">&mdash; Jun 30, 2018</span>
+            </div>
+            <div>
+              <a href="https://karpathy.github.io/2019/04/25/recipe/" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Expanded in A Recipe for Training Neural Networks <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-01" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-03" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: Software 2.0 <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 03 -->
+      <section id="lesson-03" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">03</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">Software 2.0</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>Karpathy reframed deep learning as a new <em>kind</em> of software, not a new <em>application</em> of software.</p>
+          
+          <p><strong>Software 1.0</strong> is explicit instructions written by a human in Python or C++.<br>
+          <strong>Software 2.0</strong> is weights found by optimization against a dataset. The programmer specifies a goal and a search space; gradient descent writes the actual program.</p>
+          
+          <p>Consequences he draws out:</p>
+          <ul>
+            <li>The dataset is the source code. Curating data is programming.</li>
+            <li>Neural nets are more <em>homogeneous</em>, more <em>portable to silicon</em>, and degrade more <em>gracefully</em> than handwritten code.</li>
+            <li>Version control, debugging, and IDEs for 2.0 barely exist yet &mdash; the tooling is the opportunity.</li>
+            <li>Increasingly, 1.0 code is the thin glue around large 2.0 blocks.</li>
+          </ul>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <a href="https://karpathy.medium.com/software-2-0-a64152b37c35" target="_blank" rel="noopener"
+             class="text-sm text-blue-400 hover:underline inline-flex items-center gap-1.5">Software 2.0 <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+          <span class="text-zinc-500 text-xs ml-2">&mdash; Medium, Nov 2017</span>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-02" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-04" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: The Tesla Data Engine <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 04 -->
+      <section id="lesson-04" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">04</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">The Tesla Data Engine</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>Leading Autopilot taught Karpathy how AI works at production scale, where the model is the easy part.</p>
+          
+          <p><strong>Most of the work is the data flywheel, not the architecture.</strong><br>
+          A repeatable loop: ship the model, mine the failures, label the hard cases, retrain, ship again. The competitive advantage is the <em>loop</em>, not any single net.</p>
+          
+          <p><strong>Chase the long tail deliberately.</strong><br>
+          Trigger the fleet to send back exactly the rare scenarios you fail on &mdash; stop signs on a billboard, a truck carrying traffic cones. The interesting examples are rare by definition, so you must hunt them.</p>
+          
+          <p><strong>The "operation vacation" goal.</strong><br>
+          Build the engine so well that improving the product becomes mostly automated data work, freeing engineers from hand-tuning.</p>
+          
+          <p><strong>Labeling is engineering, not grunt work.</strong><br>
+          Label quality, label consistency, and the ontology you label against decide your ceiling.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://www.youtube.com/watch?v=hx7BXih7zx8" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">AI for Full-Self Driving at Tesla <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; Scaled ML Conference, 2020</span>
+            </div>
+            <div>
+              <a href="https://x.com/karpathy/status/1599852921541128194" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">"data engine" tweet <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; Dec 2022</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-03" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-05" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: LLMs as a Paradigm <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 05 -->
+      <section id="lesson-05" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">05</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">LLMs as a New Computing Paradigm</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>In his "Intro to LLMs" and "LLM OS" talks, Karpathy positions large models as the kernel of an emerging operating system, not a chatbot feature.</p>
+          
+          <p><strong>The LLM is the CPU; the context window is the RAM.</strong><br>
+          The model orchestrates tools &mdash; a browser, a Python interpreter, other models, a file system &mdash; the way an OS orchestrates peripherals. Prompting is the new system call.</p>
+          
+          <p><strong>Pretraining is lossy compression of the internet.</strong><br>
+          The base model is a "zip file" of human text, recalled probabilistically. It dreams documents. Alignment (SFT + RLHF) turns the dreamer into an assistant.</p>
+          
+          <p><strong>Think in two systems.</strong><br>
+          Current models are strong at fast, intuitive "System 1" recall and weak at deliberate "System 2" reasoning. Much of the frontier is buying the model <em>time to think</em> &mdash; scratchpads, chains of thought, tool use, search over reasoning.</p>
+          
+          <p><strong>Jagged intelligence.</strong><br>
+          LLM capability is spiky, not uniform. A model can prove a theorem and then fail to tell which of 9.11 and 9.9 is larger, or miscount the letters in a word. Competence in one cell says little about the neighboring cell.</p>
+          
+          <p><strong>Tokenization is the root of a surprising amount of weirdness.</strong><br>
+          Spelling errors, arithmetic failures, trouble with whitespace and non-English text, and odd prompt sensitivities often trace back to how text is chopped into tokens. "Much of the suffering is tokenization."</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">[1hr Talk] Intro to Large Language Models <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; Nov 2023</span>
+            </div>
+            <div>
+              <a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Software Is Changing (Again) <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; YC AI Startup School, Jun 2025</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-04" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-06" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: Working With LLMs <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 06 -->
+      <section id="lesson-06" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">06</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">Working With LLMs (and "Vibe Coding")</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>Karpathy coined <strong>vibe coding</strong>: building software by describing intent in natural language and letting the model write the code, accepting diffs without reading every line.</p>
+          
+          <p>What he actually advocates underneath the meme:</p>
+          
+          <p><strong>Keep the human in the loop, and keep the loop tight.</strong><br>
+          The model proposes; you steer. Short feedback cycles beat long autonomous runs that drift.</p>
+          
+          <p><strong>Treat the LLM as a fast, fallible junior.</strong><br>
+          It is eager, knowledgeable, and confidently wrong. Verify outputs; never deploy what you have not checked. Build the verification step into the workflow, not as an afterthought.</p>
+          
+          <p><strong>Context is the scarce resource.</strong><br>
+          What you put in the window &mdash; and what you leave out &mdash; determines the answer. Curate it like RAM.</p>
+          
+          <p><strong>Autonomy has a slider, not a switch.</strong><br>
+          Choose how much rope to give the model per task. High autonomy for throwaway scripts; tight control for anything that ships or touches real systems.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">"vibe coding" tweet <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; Feb 2, 2025</span>
+            </div>
+            <div>
+              <a href="https://www.youtube.com/watch?v=LCEmiRjPEtQ" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Software Is Changing (Again) <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; YC AI Startup School, Jun 2025</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-05" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-07" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: On Learning and Building <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 07 -->
+      <section id="lesson-07" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">07</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">On Learning and Building</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p><strong>Build it from scratch at least once.</strong><br>
+          micrograd is ~150 lines and contains the entire intellectual core of backprop. nanoGPT is a few hundred lines and is a real GPT. Understanding comes from re-deriving, not re-reading.</p>
+          
+          <p><strong>"The best way to understand something is to build it."</strong><br>
+          Karpathy's "Zero to Hero" series is the method made explicit: implement the thing end to end, smallest version first, no hidden libraries.</p>
+          
+          <p><strong>Write the dumb baseline.</strong><br>
+          A simple model you fully understand beats a complex one you don't. The baseline tells you whether the problem is even hard.</p>
+          
+          <p><strong>Read the data, not just the papers.</strong><br>
+          Repeated everywhere in his work: time spent staring at raw examples is never wasted.</p>
+          
+          <p><strong>Stupidity is mostly impatience.</strong><br>
+          Most mistakes come from skipping steps &mdash; not overfitting a batch, not visualizing inputs, not checking the loss at init. Slow down and the errors disappear.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://github.com/karpathy/micrograd" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1">micrograd</a> ·
+              <a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1">nanoGPT</a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; the from-scratch implementations</span>
+            </div>
+            <div>
+              <a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Neural Networks: Zero to Hero <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+            </div>
+            <div>
+              <a href="https://cs231n.github.io/" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">CS231n Stanford course notes <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-06" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-08" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: On Education <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 08 -->
+      <section id="lesson-08" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">08</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">On Education (Eureka Labs)</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>After OpenAI and Tesla, Karpathy turned to teaching, founding Eureka Labs.</p>
+          
+          <p><strong>The bottleneck is great explanation, not content volume.</strong><br>
+          A genuinely good teacher who can hold a learner's hand through hard material is rare and scalable through AI.</p>
+          
+          <p><strong>AI as the teaching assistant, the human as the curriculum designer.</strong><br>
+          The model handles patience, repetition, and per-student adaptation; the expert designs the path.</p>
+          
+          <p><strong>Smallest working example, then scale.</strong><br>
+          The same pedagogy as his code: start with the minimal thing that runs and is fully understood, then grow it.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <div class="text-sm space-y-1">
+            <div>
+              <a href="https://eurekalabs.ai/" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Eureka Labs <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; the AI-native education company</span>
+            </div>
+            <div>
+              <a href="https://x.com/karpathy/status/1813263734707790301" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">Eureka Labs announcement <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; Jul 2024</span>
+            </div>
+            <div>
+              <a href="https://github.com/karpathy/LLM101n" target="_blank" rel="noopener" class="text-blue-400 hover:underline inline-flex items-center gap-1.5">LLM101n <i class="fa-solid fa-external-link-alt text-xs"></i></a>
+              <span class="text-zinc-500 text-xs ml-1">&mdash; flagship &ldquo;build your own AI&rdquo; course</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-07" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lesson-09" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Next: One-Page Summary <span class="group-hover:translate-x-0.5 transition">→</span></a>
+        </div>
+      </section>
+
+      <!-- LESSON 09 -->
+      <section id="lesson-09" class="scroll-mt-16 pt-4 pb-12 border-t border-zinc-800">
+        <div class="flex items-center gap-x-3 mb-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 ring-1 ring-inset ring-white/10 text-blue-400 font-mono text-base font-semibold">09</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tighter">The One-Page Summary</h3>
+        </div>
+        <div class="md-content prose-custom max-w-[72ch] text-[15px] text-zinc-300">
+          <p>The whole guide, one line per chapter.</p>
+          <ol class="list-decimal pl-5 space-y-[5px]">
+            <li><strong>Training recipe</strong> &mdash; training fails silently; become one with the data, build an end-to-end skeleton, overfit before you regularize, change one thing at a time.</li>
+            <li><strong>Common mistakes</strong> &mdash; the framework will not warn you: <code>.zero_grad()</code>, train/eval mode, logits vs probabilities, a learning rate off by 10×. Correctness is your job.</li>
+            <li><strong>Software 2.0</strong> &mdash; weights found by optimization are a new kind of code; the dataset is the source, and the tooling is still being invented.</li>
+            <li><strong>Tesla data engine</strong> &mdash; the flywheel is the product: ship, mine failures, label the long tail, retrain, repeat. The model is the easy part.</li>
+            <li><strong>LLMs as a paradigm</strong> &mdash; the LLM is the kernel, the context window is RAM; intelligence is jagged, and much of the weirdness is tokenization.</li>
+            <li><strong>Working with LLMs</strong> &mdash; keep the loop tight, treat the model as a fast fallible junior, curate context, and pick your autonomy per task.</li>
+            <li><strong>Learning and building</strong> &mdash; build it from scratch once; understanding comes from re-deriving, not re-reading.</li>
+            <li><strong>Education</strong> &mdash; the bottleneck is great explanation; AI is the teaching assistant, the human designs the path.</li>
+          </ol>
+          <p class="mt-3 text-xs text-zinc-400">For the ten aphorisms, see the 10-Line Distillation above.</p>
+        </div>
+        
+        <div class="mt-6 border-t border-zinc-800 pt-4">
+          <div class="text-xs uppercase tracking-widest font-semibold text-zinc-400 mb-1.5">Sources</div>
+          <p class="text-sm text-zinc-400">Compiled across all of the above. See the individual lessons for primary links.</p>
+        </div>
+        
+        <div class="mt-4 flex items-center gap-x-4 text-xs">
+          <a href="#lesson-08" class="text-zinc-400 hover:text-zinc-200">← Previous</a>
+          <span class="text-zinc-600">•</span>
+          <a href="#lessons" class="group inline-flex items-center gap-1 text-blue-400 hover:text-blue-300">Back to lesson cards <span class="group-hover:translate-x-0.5 transition">↑</span></a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ABOUT / CURATOR + CTA -->
+  <section id="sources" class="border-t border-zinc-800 mt-6">
+    <div class="max-w-screen-xl mx-auto px-6 py-12">
+      <div class="grid md:grid-cols-5 gap-x-8 gap-y-8">
+        <div class="md:col-span-3">
+          <div class="uppercase text-blue-400 tracking-[1px] text-xs font-semibold mb-2">About this guide</div>
+          <h3 class="section-header text-3xl font-semibold tracking-tight mb-3">Interpretation, not gospel</h3>
+          <div class="max-w-prose text-[15px] text-zinc-400 leading-relaxed">
+            This is a personal distillation of publicly shared ideas from Andrej Karpathy&rsquo;s essays, talks, lectures, and code. 
+            All errors of interpretation are the curator&rsquo;s. Corrections and additions are very welcome.
+          </div>
+          
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a href="https://github.com/cobusgreyling/karpathy-lessons/blob/main/CONTRIBUTING.md" target="_blank"
+               class="inline-flex text-sm items-center gap-x-2 rounded-lg border border-white/10 px-4 py-2 text-zinc-300 hover:bg-zinc-900 transition">
+              <i class="fa-solid fa-hands-helping"></i>
+              <span>Contribute on GitHub</span>
+            </a>
+            <a href="https://github.com/cobusgreyling/karpathy-lessons" target="_blank"
+               class="inline-flex text-sm items-center gap-x-2 rounded-lg border border-white/10 px-4 py-2 text-zinc-300 hover:bg-zinc-900 transition">
+              <i class="fa-brands fa-github"></i>
+              <span>View full repo</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="md:col-span-2">
+          <div class="rounded-3xl border border-zinc-800 bg-zinc-900 p-5">
+            <div class="flex gap-4">
+              <div class="h-12 w-12 rounded-2xl overflow-hidden ring-1 ring-white/10 shrink-0">
+                <img src="https://avatars.githubusercontent.com/u/7868717?v=4" alt="Cobus Greyling avatar" class="h-full w-full object-cover">
+              </div>
+              <div class="min-w-0">
+                <div class="font-semibold">Cobus Greyling</div>
+                <div class="text-sm text-zinc-400">Curator • AI &amp; agents</div>
+                <div class="mt-2 flex gap-x-3 text-xs">
+                  <a href="https://cobusgreyling.medium.com" target="_blank" class="text-blue-400 hover:underline">Medium</a>
+                  <a href="https://github.com/cobusgreyling" target="_blank" class="text-blue-400 hover:underline">GitHub</a>
+                  <a href="https://x.com/cobusgreyling" target="_blank" class="text-blue-400 hover:underline">X</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL FOOTER -->
+  <footer class="border-t border-zinc-800 bg-zinc-950">
+    <div class="max-w-screen-xl mx-auto px-6 py-7 text-xs flex flex-col md:flex-row items-center justify-between gap-y-3 text-zinc-400">
+      <div>
+        Released under the <a href="https://github.com/cobusgreyling/karpathy-lessons/blob/main/LICENSE" class="underline hover:text-zinc-300" target="_blank">MIT License</a>. 
+        Copyright © 2026 Cobus Greyling.
+      </div>
+      <div class="flex items-center gap-x-4">
+        <a href="https://github.com/cobusgreyling/karpathy-lessons" target="_blank" class="hover:text-zinc-200 flex items-center gap-1">
+          <i class="fa-brands fa-github"></i>
+          <span class="hidden sm:inline">cobusgreyling/karpathy-lessons</span>
+        </a>
+        <span class="text-zinc-600">•</span>
+        <span>Compiled from Andrej Karpathy&rsquo;s public work</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Tailwind script config
+    function initTailwind() {
+      document.documentElement.style.setProperty('--accent', '#3b82f6');
+      
+      // Already loaded via CDN, just ensure any runtime tweaks
+      const style = document.createElement('style');
+      style.textContent = `
+        .prose-custom a { color: #60a5fa; text-decoration: underline; text-underline-offset: 2px; }
+        .prose-custom a:hover { color: #93c5fd; }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Reading progress bar
+    function initProgressBar() {
+      const bar = document.getElementById('progress-bar');
+      if (!bar) return;
+
+      function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+        bar.style.width = progress + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
+
+    // Mobile menu
+    function initMobileMenu() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', () => {
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+          menu.classList.remove('hidden');
+          btn.innerHTML = '<i class="fa-solid fa-times"></i>';
+        } else {
+          menu.classList.add('hidden');
+          btn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        }
+      });
+
+      // Close on link click
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          btn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        });
+      });
+    }
+
+    // Smooth scroll for all internal links + offset for sticky nav
+    function initSmoothScroll() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const targetId = this.getAttribute('href').substring(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            e.preventDefault();
+            const navOffset = 64; // height of sticky nav
+            const elementPosition = target.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Update URL without jumping
+            history.pushState(null, '', '#' + targetId);
+          }
+        });
+      });
+    }
+
+    // Keyboard support: press "/" to focus first lesson or scroll to lessons
+    function initKeyboardShortcuts() {
+      document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+          e.preventDefault();
+          const lessons = document.getElementById('lessons');
+          if (lessons) lessons.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (e.key.toLowerCase() === 'g' && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          window.open('https://github.com/cobusgreyling/karpathy-lessons', '_blank');
+        }
+      });
+
+      // Add subtle hint in console for power users
+      // console.log('%c[karpathy-lessons] Press / to jump to lessons. Cmd/Ctrl+G for GitHub.', 'color:#3f3f46');
+    }
+
+    // Highlight current lesson in view (optional polish)
+    function initActiveLesson() {
+      const sections = document.querySelectorAll('section[id^="lesson-"]');
+      if (!sections.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Could add active styling to a future TOC if desired
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0.1 });
+
+      sections.forEach(s => observer.observe(s));
+    }
+
+    // Copy to clipboard for principles (on click of the card)
+    function initPrincipleCopy() {
+      document.querySelectorAll('#principles .principle-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+          const text = card.textContent.trim().replace(/^\d+\s*/, '');
+          navigator.clipboard.writeText(text).then(() => {
+            const orig = card.style.borderColor;
+            card.style.borderColor = '#3b82f6';
+            setTimeout(() => {
+              card.style.borderColor = orig || '#27272a';
+            }, 650);
+          }).catch(() => {
+            // fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+          });
+        });
+      });
+    }
+
+    // Boot everything
+    function init() {
+      initTailwind();
+      initProgressBar();
+      initMobileMenu();
+      initSmoothScroll();
+      initKeyboardShortcuts();
+      initActiveLesson();
+      initPrincipleCopy();
+
+      // If arriving with a hash, give the browser a moment then ensure offset (in case)
+      if (window.location.hash) {
+        setTimeout(() => {
+          const el = document.querySelector(window.location.hash);
+          if (el) {
+            const navOffset = 64;
+            const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+            window.scrollTo({ top, behavior: 'auto' });
+          }
+        }, 120);
+      }
+
+      // Easter egg: Konami-ish for fun (k a r p)
+      let seq = '';
+      document.addEventListener('keypress', (e) => {
+        seq += e.key.toLowerCase();
+        if (seq.length > 4) seq = seq.slice(-4);
+        if (seq === 'karp') {
+          document.body.style.transition = 'filter 400ms';
+          document.body.style.filter = 'saturate(1.6) hue-rotate(8deg)';
+          setTimeout(() => { document.body.style.filter = ''; }, 1200);
+          seq = '';
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

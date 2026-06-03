@@ -1,4 +1,4 @@
-name: Deploy docs to GitHub Pages
+name: Deploy showcase to GitHub Pages
 
 on:
   push:
@@ -19,11 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-      - run: pip install mkdocs-material
-      - run: mkdocs build --strict
+
+      - name: Prepare static showcase site
+        run: |
+          mkdir -p site
+          cp index.html site/index.html
+          cp social-preview.png site/social-preview.png
+          # Also expose the source markdown files under /docs for easy linking
+          mkdir -p site/docs
+          cp -r docs/*.md site/docs/
+          cp LICENSE site/LICENSE.txt 2>/dev/null || true
+          cp README.md site/README.md 2>/dev/null || true
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

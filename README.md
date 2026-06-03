@@ -9,24 +9,23 @@ Curated by **Cobus Greyling** ([Medium](https://cobusgreyling.medium.com)).
 This is not a biography. It is a working set of principles you can apply tomorrow.
 
 **Who it's for:** ML engineers, applied researchers, and anyone building with or on top of
-neural nets and LLMs. Read it front to back in ~15 minutes, or jump to a chapter — each ends
-with links to Karpathy's original essays, talks, and code so you can go to the source.
+neural nets and LLMs. Read it front to back in ~15 minutes, or jump to a chapter.
 
-📖 Read as a site: **https://cobusgreyling.github.io/karpathy-lessons/**
+> **📖 [Read the full showcase site](https://cobusgreyling.github.io/karpathy-lessons/)** — beautiful one-page experience with the 10 core principles as interactive cards, visual lesson browser, and the complete distilled chapters. (Recommended)
 
----
+## Contents (also available on the site)
 
-## Contents
+1. [The Recipe for Training Neural Networks](https://cobusgreyling.github.io/karpathy-lessons/#lesson-01) — fail loud, not silent.
+2. [The Most Common Neural Net Mistakes](https://cobusgreyling.github.io/karpathy-lessons/#lesson-02) — the brutal checklist.
+3. [Software 2.0](https://cobusgreyling.github.io/karpathy-lessons/#lesson-03) — weights as code, the dataset as source.
+4. [The Tesla Data Engine](https://cobusgreyling.github.io/karpathy-lessons/#lesson-04) — the flywheel is the product.
+5. [LLMs as a New Computing Paradigm](https://cobusgreyling.github.io/karpathy-lessons/#lesson-05) — LLM as OS, context as RAM.
+6. [Working With LLMs (and "Vibe Coding")](https://cobusgreyling.github.io/karpathy-lessons/#lesson-06) — keep the loop tight.
+7. [On Learning and Building](https://cobusgreyling.github.io/karpathy-lessons/#lesson-07) — build it from scratch once.
+8. [On Education (Eureka Labs)](https://cobusgreyling.github.io/karpathy-lessons/#lesson-08) — explanation is the bottleneck.
+9. [The One-Page Summary](https://cobusgreyling.github.io/karpathy-lessons/#lesson-09) — the whole thing, scannable.
 
-1. [The Recipe for Training Neural Networks](docs/01-training-recipe.md) — fail loud, not silent.
-2. [The Most Common Neural Net Mistakes](docs/02-common-mistakes.md) — the brutal checklist.
-3. [Software 2.0](docs/03-software-2.0.md) — weights as code, the dataset as source.
-4. [The Tesla Data Engine](docs/04-tesla-data-engine.md) — the flywheel is the product.
-5. [LLMs as a New Computing Paradigm](docs/05-llm-paradigm.md) — LLM as OS, context as RAM.
-6. [Working With LLMs (and "Vibe Coding")](docs/06-working-with-llms.md) — keep the loop tight.
-7. [On Learning and Building](docs/07-learning-and-building.md) — build it from scratch once.
-8. [On Education (Eureka Labs)](docs/08-education.md) — explanation is the bottleneck.
-9. [The One-Page Summary](docs/09-one-page-summary.md) — the whole thing, scannable.
+**Markdown sources:** See the [`docs/`](docs/) folder in this repo.
 
 ---
 

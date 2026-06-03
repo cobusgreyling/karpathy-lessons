@@ -1,5 +1,7 @@
 # What Andrej Karpathy Learnt
 
+> **📖 Best experience:** [Open the full showcase site](https://cobusgreyling.github.io/karpathy-lessons/) — beautiful one-page version with interactive cards and all content.
+
 A distilled field guide to the lessons Andrej Karpathy has shared across a decade of building
 neural networks at OpenAI, leading AI for Tesla Autopilot, teaching Stanford's CS231n, and
 shipping nanoGPT, micrograd, and Eureka Labs.
